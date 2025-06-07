@@ -1,0 +1,125 @@
+ body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        
+        .main-container {
+            display: flex;
+            width: 100%;
+        }
+        
+        .camera-container {
+            flex: 3;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            border: 3px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #000;
+        }
+        
+        #videoFeed {
+            width: 100%;
+            display: block;
+        }
+        
+        .layout-1frame {
+            width: 640px;
+            height: 480px;
+        }
+        
+        .layout-4frame {
+            width: 1280px;
+            height: 960px;
+        }
+        
+        .control-panel {
+            flex: 1;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .control-section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #34495e;
+            padding-bottom: 20px;
+        }
+        
+        .control-section h3 {
+            margin-top: 0;
+            color: #ecf0f1;
+        }
+        
+        .effect-thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .effect-thumbnail {
+            width: 80px;
+            height: 60px;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .effect-thumbnail:hover {
+            border-color: #3498db;
+        }
+        
+        .effect-thumbnail.active {
+            border-color: #2ecc71;
+            transform: scale(1.05);
+        }
+        
+        .effect-label {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 5px;
+            color: #bdc3c7;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button.active {
+            background-color: #2ecc71;
+        }
+        
+        .layout-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }

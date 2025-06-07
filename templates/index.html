@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photobooth with Unified Effects</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Bagian Kamera -->
+        <div class="camera-container">
+            <div class="video-container" id="videoContainer">
+                <img id="videoFeed" src="{{ url_for('video_feed') }}">
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button id="captureBtn">Capture Photo</button>
+                <button id="downloadBtn">Download Photo</button>
+            </div>
+            
+            <!-- Preview Section -->
+            <div class="control-section">
+                <h3>Preview</h3>
+                <img id="preview" style="margin-top:10px; display:none; border:2px solid #ccc; max-width:100%;" />
+            </div>
+        </div>
+        
+        <!-- Panel Kontrol -->
+        <div class="control-panel">
+            <div class="control-section">
+                <h3>Layout Options</h3>
+                <div class="layout-options">
+                    <button id="singleFrameBtn" class="active">Single Frame</button>
+                    <button id="fourFrameBtn">Four Frames</button>
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <h3>Select Effect</h3>
+                <p>Current effect: <strong id="currentEffect">sketch</strong></p>
+                
+                <div class="effect-thumbnails">
+                    <div class="effect-thumbnail" data-effect="original" style="background-color: #ffffff;">
+                        <div class="effect-label">Original</div>
+                    </div>
+                    <div class="effect-thumbnail active" data-effect="sketch" style="background-color: #f1f1f1;">
+                        <div class="effect-label">Sketch</div>
+                    </div>
+                    <div class="effect-thumbnail" data-effect="pencil" style="background-color: #e1e1e1;">
+                        <div class="effect-label">Pencil</div>
+                    </div>
+                    <div class="effect-thumbnail" data-effect="sepia" style="background-color: #c1b7a5;">
+                        <div class="effect-label">Sepia</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elemen UI
+        const singleFrameBtn = document.getElementById('singleFrameBtn');
+        const fourFrameBtn = document.getElementById('fourFrameBtn');
+        const videoContainer = document.getElementById('videoContainer');
+        const videoFeed = document.getElementById('videoFeed');
+        const effectThumbnails = document.querySelectorAll('.effect-thumbnail');
+        const currentEffectDisplay = document.getElementById('currentEffect');
+        
+        // Fungsi untuk mengubah layout
+        function setLayout(layout) {
+            if (layout === '1frame') {
+                singleFrameBtn.classList.add('active');
+                fourFrameBtn.classList.remove('active');
+                videoContainer.className = 'video-container layout-1frame';
+                videoFeed.width = 640;
+                videoFeed.height = 480;
+            } else {
+                singleFrameBtn.classList.remove('active');
+                fourFrameBtn.classList.add('active');
+                videoContainer.className = 'video-container layout-4frame';
+                videoFeed.width = 1280;
+                videoFeed.height = 960;
+            }
+            
+            fetch(`/toggle_layout`)
+                .then(response => response.text())
+                .then(data => console.log(data));
+        }
+        
+        // Fungsi untuk mengubah efek
+        function setEffect(effect) {
+            effectThumbnails.forEach(thumb => thumb.classList.remove('active'));
+            document.querySelector(`.effect-thumbnail[data-effect="${effect}"]`).classList.add('active');
+            currentEffectDisplay.textContent = effect;
+            
+            fetch(`/set_effect/${effect}`)
+                .then(response => response.text())
+                .then(data => console.log(data));
+        }
+        
+        // Event listeners
+        singleFrameBtn.addEventListener('click', () => setLayout('1frame'));
+        fourFrameBtn.addEventListener('click', () => setLayout('4frame'));
+        
+        effectThumbnails.forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                setEffect(this.dataset.effect);
+            });
+        });
+        
+        document.getElementById('captureBtn').addEventListener('click', function() {
+            fetch('/capture')
+                .then(response => response.text())
+                .then(data => {
+                    alert(data === 'Capture success' ? 'Photo captured!' : 'Failed to capture');
+                    if (data === 'Capture success') {
+                        document.getElementById('preview').src = '/download?' + new Date().getTime();
+                        document.getElementById('preview').style.display = 'block';
+                    }
+                });
+        });
+        
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            window.location.href = '/download';
+        });
+        
+        // Set layout awal
+        setLayout('1frame');
+    </script>
+</body>
+</html>
