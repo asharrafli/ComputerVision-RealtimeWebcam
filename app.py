@@ -119,10 +119,6 @@ def set_effect(effect):
     current_effect = effect
     return f"Effect changed to {current_effect}"
 
-# def index():
-#     return render_template('index.html', current_effect=current_effect, current_layout=current_layout)
-
-
 @app.route('/capture')
 def capture():
     global capture_image, last_frame
