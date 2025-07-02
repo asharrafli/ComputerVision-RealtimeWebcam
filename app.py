@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from io import BytesIO
 
+# inisialisasi Flask
 app = Flask(__name__)
 
 current_effect = 'original' # default effect
@@ -10,9 +11,11 @@ current_layout = 'single'
 capture_image = None
 last_frame = None  # Variabel global untuk menyimpan frame terakhir
 
-# Buat objek kamera global agar webcam tidak mati-nyala
+# untuk mengaktifkan kamera di webcam utama
 camera = cv2.VideoCapture(0)
 
+# membuat kamera otomatis mati ketika aplikasi berhenti/diclose, 
+# untuk mencegah stuck
 import atexit
 atexit.register(lambda: camera.release())
 
@@ -99,10 +102,13 @@ def generate_camera():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
+
+#Route untuk halaman utama
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Route untuk toggle layout
 @app.route('/toggle_layout')
 def toggle_layout():
     global current_layout
@@ -113,12 +119,14 @@ def toggle_layout():
         current_layout = '1frame'
     return f"Layout changed to {current_layout}"
 
+# Route untuk mengubah efek
 @app.route('/set_effect/<effect>')
 def set_effect(effect):
     global current_effect
     current_effect = effect
     return f"Effect changed to {current_effect}"
 
+# Route untuk menangkap gambar
 @app.route('/capture')
 def capture():
     global capture_image, last_frame
@@ -136,7 +144,7 @@ def capture():
             bottom_row = np.hstack((frame3, frame4))
             capture_image = np.vstack((top_row, bottom_row))
         return 'Captured successfully!'
-    return 'Failed to capture image.'
+    return 'Success capture image.'
 
 # route untuk mendownload
 @app.route('/download')
@@ -151,10 +159,14 @@ def download():
                          as_attachment=True, download_name=filename)
     return 'No image captured.'
 
+# Route untuk video feed, agar ketika download foto
+# kamera tetap berjalan
 @app.route('/video_feed')
 def video_feed():
     return Response(generate_camera(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+# Menjalankan aplikasi Flask
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)
     # app.run(debug=True, port=5000) # jika ingin menggunakan localhost saja
