@@ -18,20 +18,28 @@ This project simplifies the integration of live video processing into web applic
 Getting Started
 Prerequisites
 This project requires the following dependencies:
+Flask, Numpy, and OpenCV
 
 Programming Language: Python
-
-Package Manager: Conda
 
 Installation
 Build ComputerVision-RealtimeWebcam from the source and install dependencies:
 
 Clone the repository:
 
-git clone https://github.com/asharrafli/ComputerVision-RealtimeWebcam
+> git clone https://github.com/asharrafli/ComputerVision-RealtimeWebcam
 
 Navigate to the project directory:
 
-cd ComputerVision-RealtimeWebcam
+> cd ComputerVision-RealtimeWebcam
 
 Install the dependencies
+
+> pip install -r requirements.txt
+
+if you done install the dependencies, you should run the project:
+
+> python app.py
+
+the result if you done run the project
+![captured_image_sepia](https://github.com/user-attachments/assets/9c90d2dc-412c-45d5-80db-f3ed09a8170e)
